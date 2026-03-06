@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NASA Habitability Engine</title>
+    <style>
+        body { background: #0b0d17; color: #4db8ff; font-family: 'Courier New', monospace; padding: 20px; }
+        .container { border: 1px solid #1a3a5a; padding: 20px; border-radius: 10px; max-width: 600px; margin: auto; }
+        input { width: 100%; margin: 10px 0; background: #161b22; color: #00ffcc; border: 1px solid #30363d; padding: 5px; }
+        .result { margin-top: 20px; padding: 15px; border-radius: 5px; font-weight: bold; }
+        .habitable { background: #062e1c; color: #00ff88; border: 1px solid #00ff88; }
+        .dead { background: #3d0a0a; color: #ff4d4d; border: 1px solid #ff4d4d; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>NASA HABITABILITY ENGINE</h1>
+    <p>STATUS: HACKERRANK CERTIFIED (C++ PORT)</p>
+    <hr>
+    
+    <label>Stellar Luminosity (L☉):</label>
+    <input type="number" id="lum" value="1.0" step="0.1">
+    
+    <label>Orbital Distance (AU):</label>
+    <input type="number" id="dist" value="1.0" step="0.1">
+    
+    <label>Atmospheric CO2 (%):</label>
+    <input type="number" id="co2" value="0.04" step="0.01">
+    
+    <button onclick="calculate()" style="width:100%; padding:10px; background:#4db8ff; color:#0b0d17; border:none; cursor:pointer;">RUN ANALYSIS</button>
+
+    <div id="output" class="result"></div>
+</div>
+
+<script>
+function calculate() {
+    let L = document.getElementById('lum').value;
+    let D = document.getElementById('dist').value;
+    let C = document.getElementById('co2').value;
+
+    // PHYSICS: Inverse Square Law
+    let flux = L / Math.pow(D, 2);
+    
+    // CHEMISTRY: Greenhouse Model
+    // Base temp (Kelvin) scaled + CO2 effect
+    let tempK = (flux * 273); 
+    let greenhouse = 1 + (C / 100);
+    let tempC = (tempK * greenhouse) - 273.15;
+
+    let display = document.getElementById('output');
+    
+    // BIOLOGY: Survival Thresholds (Fixing the >= 0 bug!)
+    if (tempC >= 0 && tempC <= 100) {
+        display.className = "result habitable";
+        display.innerHTML = "TEMP: " + tempC.toFixed(2) + "°C<br>STATUS: HABITABLE";
+    } else {
+        display.className = "result dead";
+        display.innerHTML = "TEMP: " + tempC.toFixed(2) + "°C<br>STATUS: UNINHABITABLE";
+    }
+}
+</script>
+</body>
+</html>
